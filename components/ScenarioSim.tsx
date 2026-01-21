@@ -36,7 +36,7 @@ const ScenarioSim: React.FC<Props> = ({ onReward }) => {
     return (
       <div className="bg-white border-8 border-gray-900 rounded-[3rem] p-12 text-center">
         <div className="w-16 h-16 border-8 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-        <p className="font-black italic uppercase text-gray-500">Generating New Road Scenario...</p>
+        <p className="font-black italic uppercase text-gray-500">Analyzing Defensive Scenarios...</p>
       </div>
     );
   }
@@ -46,24 +46,24 @@ const ScenarioSim: React.FC<Props> = ({ onReward }) => {
   return (
     <div className="bg-white border-8 border-gray-900 rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in duration-500">
       <div className="bg-gray-900 p-4 flex justify-between items-center text-white">
-        <span className="font-black italic uppercase tracking-widest text-xs">S.E.E. Mission Strategy</span>
-        <span className="bg-blue-600 px-3 py-1 rounded-full text-[10px] font-black uppercase">Level: Intermediate</span>
+        <span className="font-black italic uppercase tracking-widest text-xs">S.E.E. Defensive Scenario</span>
+        <span className="bg-green-600 px-3 py-1 rounded-full text-[10px] font-black uppercase">Search • Evaluate • Execute</span>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2">
         <div className="p-8 lg:p-12 border-b lg:border-b-0 lg:border-r-8 border-gray-900">
           <div className="bg-gray-100 rounded-[2rem] aspect-video mb-8 flex items-center justify-center p-6 text-center border-4 border-dashed border-gray-300 relative group overflow-hidden">
             <p className="font-bold italic text-gray-500 group-hover:text-gray-700 transition-colors">
-              [Simulation Visual: {scenario.imageDescription}]
+              [Visual Assessment: {scenario.imageDescription}]
             </p>
             <div className="absolute inset-0 bg-blue-600/5 group-hover:bg-transparent transition-all"></div>
           </div>
-          <h3 className="text-2xl font-black uppercase italic leading-tight text-gray-900 mb-4">The Situation:</h3>
+          <h3 className="text-2xl font-black uppercase italic leading-tight text-gray-900 mb-4">The Context:</h3>
           <p className="text-gray-600 font-bold leading-relaxed">{scenario.context}</p>
         </div>
 
         <div className="p-8 lg:p-12 bg-gray-50">
-          <h3 className="text-xl font-black uppercase italic text-gray-400 mb-8">What do you do next?</h3>
+          <h3 className="text-xl font-black uppercase italic text-gray-400 mb-8">Determine Safest Action:</h3>
           <div className="space-y-4">
             {scenario.options.map((opt, i) => {
               let style = "bg-white border-4 border-gray-900 hover:bg-gray-100 hover:-translate-y-1";
@@ -91,7 +91,7 @@ const ScenarioSim: React.FC<Props> = ({ onReward }) => {
             <div className="mt-8 animate-in slide-in-from-bottom-4">
               <div className={`p-6 rounded-3xl border-4 ${scenario.options[selectedIdx].isCorrect ? 'bg-green-600 text-white border-green-800' : 'bg-red-600 text-white border-red-800'}`}>
                 <h4 className="font-black italic uppercase text-sm mb-2">
-                  {scenario.options[selectedIdx].isCorrect ? 'Success!' : 'Critical Error'}
+                  {scenario.options[selectedIdx].isCorrect ? 'Professional Assessment' : 'Safety Violation'}
                 </h4>
                 <p className="text-sm font-bold leading-snug">{scenario.options[selectedIdx].feedback}</p>
               </div>
@@ -99,7 +99,7 @@ const ScenarioSim: React.FC<Props> = ({ onReward }) => {
                 onClick={loadScenario}
                 className="w-full mt-6 bg-gray-900 text-white py-5 rounded-2xl font-black uppercase italic tracking-widest hover:bg-black transition-all shadow-xl"
               >
-                Next Mission
+                Next Training Scenario
               </button>
             </div>
           )}
