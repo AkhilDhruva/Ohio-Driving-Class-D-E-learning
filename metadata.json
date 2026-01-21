@@ -1,0 +1,8 @@
+{
+  "name": "DriveReady - Elite Driving Academy",
+  "description": "A comprehensive online platform for driving instruction featuring interactive theory quizzes, lesson booking, and an AI-powered Virtual Driving Coach.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

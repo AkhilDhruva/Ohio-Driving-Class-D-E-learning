@@ -1,0 +1,106 @@
+
+import { GoogleGenAI, Type } from "@google/genai";
+
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+
+const OHIO_RESEARCH_REPORT = `
+Comprehensive Research Report: Ohio Mandatory Class D Online Driver Training
+- Class D: Standard operator license for personal vehicles.
+- NEW MANDATE (Sept 30, 2025): Anyone under 21 (ages 16-20) MUST complete full 24h classroom + 8h behind-the-wheel + 50h supervised practice.
+- S.E.E. Method: Search, Evaluate, Execute (Core Ohio Strategy).
+- Smith System: Aim High, Get Big Picture, Keep Eyes Moving, Leave Yourself an Out, Make Sure They See You.
+- Daily Compliance: Max 4 hours online work per day.
+- Security: PVQs (Personal Validation Questions) are random. 
+- OVI Limits: 0.08% for 21+, 0.02% for under 21. Implied consent is law.
+`;
+
+export const getVirtualCoachResponse = async (userMessage: string, history: { role: 'user' | 'model', text: string }[]) => {
+  const chat = ai.chats.create({
+    model: 'gemini-3-flash-preview',
+    config: {
+      systemInstruction: `You are 'Coach Alex', the mascot for DriveReady Academy. 
+      Help the student with driving theory. Focus on Ohio laws and the S.E.E. strategy. 
+      Keep it high-energy and encouraging!`,
+    },
+  });
+
+  const response = await chat.sendMessage({ message: userMessage });
+  return response.text;
+};
+
+export const generateDrivingQuiz = async () => {
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: `Generate 5 unique multiple-choice questions for an Ohio driving theory test. Focus on the S.E.E. strategy and OVI laws.`,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            question: { type: Type.STRING },
+            options: { type: Type.ARRAY, items: { type: Type.STRING } },
+            correctIndex: { type: Type.INTEGER },
+            explanation: { type: Type.STRING }
+          },
+          required: ["question", "options", "correctIndex", "explanation"]
+        }
+      }
+    }
+  });
+  return JSON.parse(response.text || '[]');
+};
+
+export const generateScenario = async () => {
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: `Create a "Search, Evaluate, Execute" (S.E.E.) driving scenario in Ohio. 
+    Describe a situation (e.g., merging on I-71, school bus stopping). Provide 3 options for action.`,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          id: { type: Type.STRING },
+          context: { type: Type.STRING },
+          imageDescription: { type: Type.STRING },
+          options: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                text: { type: Type.STRING },
+                isCorrect: { type: Type.BOOLEAN },
+                feedback: { type: Type.STRING }
+              }
+            }
+          }
+        },
+        required: ["id", "context", "imageDescription", "options"]
+      }
+    }
+  });
+  return JSON.parse(response.text || '{}');
+};
+
+export const generateFlashcard = async (wrongTopic: string) => {
+  const response = await ai.models.generateContent({
+    model: 'gemini-3-flash-preview',
+    contents: `The student missed a question about "${wrongTopic}". Generate a remedial flashcard with a 'Front' (Concept) and 'Back' (Key takeaway/Law).`,
+    config: {
+      responseMimeType: "application/json",
+      responseSchema: {
+        type: Type.OBJECT,
+        properties: {
+          id: { type: Type.STRING },
+          front: { type: Type.STRING },
+          back: { type: Type.STRING },
+          category: { type: Type.STRING }
+        },
+        required: ["id", "front", "back", "category"]
+      }
+    }
+  });
+  return JSON.parse(response.text || '{}');
+};
